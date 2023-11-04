@@ -1,3 +1,5 @@
+import os
+import sys
 import interfaz
 import router
 
@@ -19,8 +21,11 @@ def programa_principal():
         time.sleep(1)
 
 
+
+
 # Crear y ejecutar los subprocesos
 subproceso_secundario = threading.Thread(target=programa_secundario)
 subproceso_secundario.start()
 
 programa_principal()
+

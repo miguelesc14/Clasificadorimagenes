@@ -23,14 +23,17 @@ def rut():
                     ruta = archivo.read()
 
                 if (ruta != ""):
-                    i += 1
-                    print("ruta= ", ruta)
+                    if(ruta == "cierra"):
+                        sys.exit(0)
+                    else:
+                        i += 1
+                        print("ruta= ", ruta)
 
-                    el_inicio(ruta)
+                        el_inicio(ruta)
 
             else:
-                #print("Aún no existe")
-                #print(".")
+                print("Aún no existe")
+                print(".")
                 isa=0
         except FileNotFoundError:
             print("El directorio no existe.")

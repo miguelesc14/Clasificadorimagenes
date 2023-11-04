@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import tkinter as tk
@@ -34,6 +35,7 @@ def gui():
 
     def save():
         #final_label.config(text="Nuevo texto")
+        barra_progreso.grid(row=5, column=1, padx=10, pady=10, columnspan=3)
         ruta = input_entry.get()
         with open("ban.txt", "w") as archivo:
             archivo.write(str("0"))
@@ -46,26 +48,31 @@ def gui():
         # Inicio
         barra_progreso['value'] = 0
         window.update_idletasks()
-        progres_label.grid(row=6, column=1, padx=10, pady=10)
+        progres_label.grid(row=6, column=1, padx=10, pady=10, columnspan=3)
         progres_label.config(text="0%: Iniciando proceso")
         time.sleep(1)
+
 
         # Ciclo
         with open("ban.txt", "r") as archivo:
             est_ban = archivo.read()
-        while (est_ban=="0"):
+        while (est_ban == "0"):
             with open("estado.txt", "r") as archivo:
                 estado = archivo.read()
-                #print(estado)
+                # print(estado)
             with open("mensaje.txt", "r") as archivo:
                 mensaje = archivo.read()
-                #print(mensaje)
-            #print("estado= ",estado)
-            barra_progreso['value'] = int(estado)
+                # print(mensaje)
+            # print("estado= ",estado)
+            print("estado = ",estado)
+            if (estado==""):
+                isss=0
+            else:
+                barra_progreso['value'] = int(estado)
             window.update_idletasks()
             progres_label.grid(row=6, column=1, padx=10, pady=10)
             progres_label.config(text=mensaje)
-            #time.sleep(1)
+            # time.sleep(1)
             with open("ban.txt", "r") as archivo:
                 est_ban = archivo.read()
 
@@ -76,7 +83,7 @@ def gui():
         progres_label.grid_forget()
         barra_progreso.grid_forget()
         men = "Las imágenes se han clasificado en la ruta \n"+ruta
-        final_label.grid(row=5, column=1, padx=10, pady=10)
+        final_label.grid(row=5, column=1, padx=10, pady=10, columnspan=3)
         final_label.config(text=men)
 
 
@@ -85,7 +92,13 @@ def gui():
         with open("ban.txt", "w") as archivo:
             archivo.write(str("0"))
         input_entry.delete(0, 'end')
+        with open("rutas.txt", "w") as archivo:
+            archivo.write(str("cierra"))
         window.destroy()
+        os.remove("mensaje.txt")
+        os.remove("estado.txt")
+        os.remove("ban.txt")
+        os.remove("rutas.txt")
         sys.exit(0)
 
     def credits():
@@ -112,7 +125,7 @@ def gui():
     # Agregar el título
     title_label = tk.Label(window, text="Clasificador de imágenes", font=("Arial", 24, "bold"), bg=colorr, fg="white")
     # title_label.pack(pady=20)
-    title_label.grid(row=0, column=1, padx=10, pady=10)
+    title_label.grid(row=0, column=1, padx=10, pady=10, columnspan=3)
 
     # Agregar espacios en blanco
     blank_space1 = tk.Label(window, bg=colorr)
@@ -124,7 +137,7 @@ def gui():
     # input_entry.pack(side=tk.LEFT,padx=30, expand=tk.TRUE)
     input_entry.config(fg='gray')
     input_entry.insert(0, 'Ingrese ruta ej. C://user/images')
-    input_entry.grid(row=2, column=1, padx=10, pady=10)
+    input_entry.grid(row=2, column=1, padx=10, pady=10, columnspan=2)
 
     # Establecer placeholder
     input_entry.bind("<Button-1>", click)
@@ -142,7 +155,7 @@ def gui():
                              foreground="#FFFFFF", background=colorr,
                              activeforeground="#FFFFFF", activebackground="#B879FC",
                              overrelief="flat")
-    start_button.grid(row=3, column=2, padx=10, pady=10)
+    start_button.grid(row=3, column=1, padx=10, pady=10, columnspan=3)
 
     # Agregar espacios en blanco
     blank_space2 = tk.Label(window, bg=colorr)
@@ -153,8 +166,8 @@ def gui():
     s = ttk.Style()
     s.theme_use('clam')
     s.configure("TProgressbar", foreground='white', background=colorr)
-    barra_progreso = ttk.Progressbar(window, style="TProgressbar", length=300, mode="determinate")
-    barra_progreso.grid(row=5, column=1, padx=10, pady=10)
+    barra_progreso = ttk.Progressbar(window, style="TProgressbar", length=700, mode="determinate")
+
 
     # Etiqueta para fin del proceso, aquí debería tener la ruta
     final_label = tk.Label(window, foreground="#FFFFFF", background=colorr)
