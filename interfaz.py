@@ -64,7 +64,7 @@ def gui():
                 mensaje = archivo.read()
                 # print(mensaje)
             # print("estado= ",estado)
-            print("estado = ",estado)
+            #print("estado = ",estado)
             if (estado==""):
                 isss=0
             else:

@@ -9,9 +9,10 @@ def rut():
         try:
             archivos = [archivo for archivo in os.listdir(ruta) if
                         os.path.isfile(os.path.join(ruta, archivo))]
-            clasificador.identificar(archivos)
+            clasificador.identificar(archivos, ruta)
         except FileNotFoundError:
-            print("El directorio no existe.")
+            #print("El directorio no existe.")
+            e = 0
 
     i = 0
     ruta = ""
@@ -32,9 +33,10 @@ def rut():
                         el_inicio(ruta)
 
             else:
-                print("Aún no existe")
-                print(".")
+                #print("Aún no existe")
+                #print(".")
                 isa=0
         except FileNotFoundError:
-            print("El directorio no existe.")
+            #print("El directorio no existe.")
+            d = 0
     sys.exit(0)
