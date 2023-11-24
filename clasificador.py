@@ -1,14 +1,35 @@
+import sys
 import time
 import os
 import shutil
 import datetime
 import random
 
+import tensorflow as tf
+from tensorflow.keras.preprocessing import image
+import numpy as np
+
+# Cargar el modelo previamente entrenado
+model = tf.keras.models.load_model('modelo_exportado.h5')
+
+# Función para preprocesar la imagen
+
+
 def identificar(archivos, ruta):
     print(archivos)
 
     # De prueba
-    clases = ['animeplush','coche','persona','musica','gatos','aviones']
+    clases = ['Playera',
+              'Pantalon',
+              'Sudadera',
+              'Vestido',
+              'Abrigo',
+              'Sandalia',
+              'Camisa',
+              'Zapato',
+              'Bolso',
+              'Bota']
+
     clases_encontradas = []
     rutas_carpeta = []
     ruta_carpeta = ""
@@ -22,17 +43,42 @@ def identificar(archivos, ruta):
 
 
     def clasificar():
+        def preprocess_image(image_path):
+            image_path = ruta+'/'+image_path
+            print(image_path)
+            img = image.load_img(image_path, target_size=(28, 28), grayscale=True)
+
+            img_array = image.img_to_array(img)
+            img_array = np.expand_dims(img_array, axis=0)
+            img_array /= 255.0
+            return img_array
+
+        def proceso(imagen):
+            # Preprocesar la imagen
+            imagen_preprocesada = preprocess_image(imagen)
+            # Realizar la clasificación
+            predicciones = model.predict(imagen_preprocesada)
+            indice_clase = np.argmax(predicciones[0])
+            clase_predicha = clases[indice_clase]
+
+            return clase_predicha
+
+
         with open("estado.txt", "w") as archivo:
             archivo.write(str("30"))
         with open("mensaje.txt", "w") as archivo:
             archivo.write(str("30%: Analizando archivos"))
         # Clasificar
 
-
-        clase_actual = 'musica'
-
         nonlocal clases_encontradas
-        clases_encontradas = ['musica']
+
+        for i in range(0, len(archivos)):
+            print(archivos[i],": \n")
+            clase_predicha = proceso(archivos[i])
+            print(clase_predicha)
+            clases_encontradas.append(clase_predicha)
+
+        print(clases_encontradas)
 
         time.sleep(1)
 
@@ -40,6 +86,8 @@ def identificar(archivos, ruta):
             archivo.write(str("45"))
         with open("mensaje.txt", "w") as archivo:
             archivo.write(str("45%: Analizando archivos"))
+
+
 
         for i in range(0, len(archivos)):
             # Renombrar
@@ -56,15 +104,17 @@ def identificar(archivos, ruta):
                 # Renombrar archivo
                 rad = str(
                     random.randint(1, 10))
-                nuevo_nombre = ruta +'/'+ clase_actual + '_' + fecha_formateada + '_' + rad + '.' + \
+                nuevo_nombre = ruta +'/'+ clases_encontradas[i] + '_' + fecha_formateada + '_' + rad + '.' + \
                                extension[1]
-                nn_abrev = clase_actual + '_' + fecha_formateada + '_' + rad + '.' + \
+                nn_abrev = clases_encontradas[i] + '_' + fecha_formateada + '_' + rad + '.' + \
                                extension[1]
                 archivos[i] = nn_abrev
                 os.rename(ruta_imagen, nuevo_nombre)
                 print("imagen_renombrada con el nombre " + nuevo_nombre)
             except FileNotFoundError:
                 print("La imagen no existe.")
+
+
 
 
     def crear_carpetas():
@@ -83,7 +133,8 @@ def identificar(archivos, ruta):
 
         #print(clases_encontradas)
 
-        rutas_carpeta = [ruta_carpeta+'/' + clases[i] for i in range(0, len(clases)) if clases[i] in clases_encontradas]
+        rutas_carpeta = [ruta_carpeta+'/' + clases_encontradas[i] for i in range(0, len(clases_encontradas))]
+        print(rutas_carpeta)
 
         #print(rutas_carpeta)
 
@@ -98,6 +149,7 @@ def identificar(archivos, ruta):
                     print("La carpeta " + clases_encontradas[i] + " ya existe.")
         else:
             print("Hay un error")
+
 
 
     def asignar_carpetas():
@@ -128,6 +180,8 @@ def identificar(archivos, ruta):
                         print("El archivo no existe.")
                 else:
                     print("no se encontró: ",clases_encontradas[i]," != ",archivos[i])
+
+
 
     leer()
     time.sleep(1)
