@@ -1,0 +1,11 @@
+Clasificador de imágenes
+
+Proyecto realizado durante mi instancia en el Tecnológico Nacional de México en Celaya para la asignatura "Programación lógica y funcional" en colaboración con Juan Carlos Ramirez Sanchez.
+
+Trata de un software de reconocimiento de imagenes por lotes que organiza las imagenes en carpetas según su clasificación.
+
+Con este proyecto se demuestran habilidades de
+- estructuras de datos en Python
+- Uso de APIs de reconocimiento de imagenes
+- creación de GUIs en Python
+- cratividad
